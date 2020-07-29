@@ -11,7 +11,6 @@ MARIO_IMGS = [(pygame.image.load(os.path.join('images', 'mario.png'))),
 
 class Mario:
     IMGS = MARIO_IMGS
-    ROT_VEL = 20
     ANIMATION_TIME = 2.5
 
     def __init__(self, x, y):

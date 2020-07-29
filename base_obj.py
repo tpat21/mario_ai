@@ -8,7 +8,7 @@ BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join('images', 'ba
 
 
 class Base:
-    VEL = 7
+    VEL = 9
     WIDTH = BASE_IMG.get_width()
     IMG = BASE_IMG
 

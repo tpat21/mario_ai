@@ -9,7 +9,7 @@ PIPE_IMG = (pygame.image.load(os.path.join('images', 'pipe.png')))
 
 
 class Pipe:
-    VEL = 7
+    VEL = 9
     HEIGHT = 10
 
     def __init__(self, x):
