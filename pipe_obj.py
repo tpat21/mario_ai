@@ -17,7 +17,7 @@ class Pipe:
         self.pipe = PIPE_IMG
         self.passed = False
         self.bottom = 250
-
+        self.height = 0
 
     def move(self):
         self.x -= self.VEL
@@ -25,8 +25,8 @@ class Pipe:
     def draw(self, win):
         win.blit(self.pipe, (self.x, self.bottom))
 
-    def collide(self, mario):
-        mario_mask = mario.get_mask()
+    def collide(self, mario, win):
+        mario_mask = mario.get_mask(win)
         pipe_mask = pygame.mask.from_surface(self.pipe)
 
         offset = (self.x - mario.x, self.bottom - round(mario.y))
