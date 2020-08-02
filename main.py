@@ -1,8 +1,11 @@
 import pygame
-import neat
-import time
-import os
 import random
+import os
+import time
+import neat
+# import visualize
+import pickle
+
 
 pygame.font.init()
 
@@ -11,6 +14,7 @@ from pipe_obj import *
 from base_obj import *
 from shell_obj import *
 
+DRAW_LINES = False
 WIN_WIDTH = 800
 WIN_HEIGHT = 350
 
@@ -20,8 +24,8 @@ STAT_FONT = pygame.font.SysFont('comicsans', 50)
 
 
 
-# def draw_window(win, marios, pipes, base, shells, score):
-def draw_window(win, marios, pipes, base, score):
+# def draw_window(win, marios, pipes, base, shells, score, pipe_ind):
+def draw_window(win, marios, pipes, base, score, pipe_ind):
 
 
     win.blit(BG_IMG, (0, 0))
@@ -36,7 +40,15 @@ def draw_window(win, marios, pipes, base, score):
     win.blit(text, (WIN_WIDTH - 10 - text.get_width(), 10))
 
     base.draw(win)
+
     for mario in marios:
+        # draw lines from mario to pipe
+        if DRAW_LINES:
+            try:
+                # pygame.draw.line(win, (255,0,0), (mario.x + mario.img.get_width()/2, mario.y + mario.img.get_height()/2), (pipes[pipe_ind].x + pipes[pipe_ind].PIPE_TOP.get_width()/2, pipes[pipe_ind].height), 5)
+                pygame.draw.line(win, (255,0,0), (mario.x + mario.img.get_width()/2, mario.y + mario.img.get_height()/2), (pipes[pipe_ind].x + pipes[pipe_ind].get_width()/2, pipes[pipe_ind].bottom), 5)
+            except:
+                pass
         mario.draw(win)
 
     # alive
@@ -83,14 +95,19 @@ def eval_genomes(genomes, config):
         shell_ind = 0
         rem = []
         add_pipe = False
+        pipe_ind = len(pipes) - 1
 
         for x, mario in enumerate(marios):
             ge[x].fitness += .10
+            output = nets[marios.index(mario)].activate((mario.y, abs(mario.x - pipes[pipe_ind].x), abs(mario.y - pipes[pipe_ind].bottom)))
+            # print("Mario #{}: Dist {} :Mario/pipe Dist {}: Fitness".format(marios.index(mario), mario.y, abs(mario.x - pipes[pipe_ind].x),ge[x].fitness))
+            # print(abs(mario.x - pipes[pipe_ind].x))
 
-            output = nets[marios.index(mario)].activate((mario.y, abs(mario.y - pipes[0].bottom)))
-
-            if output[0] > .5:
+            # print(output)
+            #
+            if output[0] < .5:
                 mario.jump()
+
 
 
         # add_shell = False
@@ -101,10 +118,13 @@ def eval_genomes(genomes, config):
 
         for pipe in pipes:
             pipe.move()
+            # print("Number of Pipes:{}".format(len(pipes)))
+
             # check for collision
             for mario in marios:
                 if pipe.collide(mario, win):
                     ge[marios.index(mario)].fitness -= 1
+
                     nets.pop(marios.index(mario))
                     ge.pop(marios.index(mario))
                     marios.pop(marios.index(mario))
@@ -121,17 +141,19 @@ def eval_genomes(genomes, config):
                 genome.fitness += 5
             pipes.append(Pipe(rand_pos))
 
-        for r in rem:
-            pipe.remove(r)
+        # for r in rem:
+        #     pipes.remove(r)
+        #     print("Number of Pipes:{}".format(len(pipes)))
+
 
         for mario in marios:
             if not marios:
                 nets.pop(marios.index(mario))
                 ge.pop(marios.index(mario))
                 marios.pop(marios.index(mario))
-                run = False
 
-        draw_window(win, marios, pipes, base, score)
+
+        draw_window(win, marios, pipes, base, score, pipe_ind)
 
         # Determins how many pipes are on the screen
         # if len(marios) > 0:
@@ -182,7 +204,7 @@ def running(config_path):
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    winner = p.run(eval_genomes, 10)
+    winner = p.run(eval_genomes, 20)
 
     print('\nBest genome:\n{!s}'.format(winner))
 

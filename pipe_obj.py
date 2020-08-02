@@ -17,7 +17,7 @@ class Pipe:
         self.pipe = PIPE_IMG
         self.passed = False
         self.bottom = 250
-        self.height = 0
+
 
     def move(self):
         self.x -= self.VEL

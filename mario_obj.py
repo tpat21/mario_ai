@@ -26,7 +26,7 @@ class Mario:
         self.tilt = 0
 
         self.isJump = False
-        self.jumpCount = 13
+        self.jumpCount = 14
 
     def jump(self):
 
@@ -40,8 +40,8 @@ class Mario:
                 self.y -= self.jumpCount ** 2 * 0.1 * neg
                 self.jumpCount -= 1
             else:
-                self.isJump = False
                 self.jumpCount = 14
+
 
 
 
