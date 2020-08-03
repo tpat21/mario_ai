@@ -18,6 +18,7 @@ class Mario:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
         self.tick_count = 0
         self.vel = 0
         self.img_count = 0
@@ -60,13 +61,13 @@ class Mario:
         elif self.img_count == self.ANIMATION_TIME * 4 + 1:
             self.img = self.IMGS[0]
             self.img_count = 0
-
+        #
         # if self.isJump:
         #     self.img = self.IMGS[3]
 
 
         win.blit(self.img, (self.x, self.y))
 
-    def get_mask(self, win):
+    def get_mask(self):
 
         return pygame.mask.from_surface(self.img)

@@ -25,8 +25,8 @@ class Pipe:
     def draw(self, win):
         win.blit(self.pipe, (self.x, self.bottom))
 
-    def collide(self, mario, win):
-        mario_mask = mario.get_mask(win)
+    def collide(self, mario):
+        mario_mask = mario.get_mask()
         pipe_mask = pygame.mask.from_surface(self.pipe)
 
         offset = (self.x - mario.x, self.bottom - round(mario.y))
